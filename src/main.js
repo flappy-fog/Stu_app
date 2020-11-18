@@ -30,10 +30,10 @@ router.beforeEach((to, from, next) => {
     //  如果是注册页面或者是登入页面，直接放行;
     next()
   } else{ //  没token
-    if(to.path === "/login"){
+    if(to.path === "/"){
       next()
     } else{ //  访问的不是登入页，就要跳转到登入页
-      next({ path:"/login" })
+      next({ path:"/" })
     }
   }
   
