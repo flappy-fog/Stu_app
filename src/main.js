@@ -18,6 +18,27 @@ Vue.use(ElementUI);
 // Vue.component('el-carousel', Carousel)
 // Vue.component('el-carousel-item' ,CarouselItem)
 
+// window.lodash = _.noConflict();
+
+//  路由前置钩子(导航守卫)
+router.beforeEach((to, from, next) => {
+  // console.log(to);
+  // console.log(from);
+  //  用户登入之后,localStorage中有token
+  let token = localStorage.getItem("qf2006-token");
+  if(token){
+    //  如果是注册页面或者是登入页面，直接放行;
+    next()
+  } else{ //  没token
+    if(to.path === "/login"){
+      next()
+    } else{ //  访问的不是登入页，就要跳转到登入页
+      next({ path:"/login" })
+    }
+  }
+  
+})
+
 new Vue({
   router,
   store,

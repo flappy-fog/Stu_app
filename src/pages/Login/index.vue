@@ -47,11 +47,18 @@
 
 <script>
 //  登入逻辑的实现
-
 //  1.收集用户输入的username&password传递给后端
-//  2.
 
+//  2.登录通过后，将后端返回的token存到本地，跳转到主页
 
+//  3.每次请求的时候，携带token到请求头authorization
+
+//  4.展示token校验正确的数据
+
+//  5.校验不通过，跳转到登入页
+
+import { login } from "@/api" 
+import { mapMutations } from "vuex"
 export default {
   data() {
     //jsDoc
@@ -60,7 +67,7 @@ export default {
      * @param {String} value 输入框
      * @param {Function} callback 校验通过不传参  不通过传参数
      */
-    var pavalidateUsername = (rule, value, callback) => {
+    var validateUsername = (rule, value, callback) => {
       // console.log(rule);
       // console.log(value);
 
@@ -73,9 +80,11 @@ export default {
         callback();
       }
     };
+
+    //  校验用户密码
     var validatePassword = (rule, value, callback) => {
-      if (!value) {
-        callback("请输入密码");
+      if (value === '') {
+        callback(new Error('请输入密码'));
       } else {
         callback();
       }
@@ -86,18 +95,53 @@ export default {
         password: "",
       },
       rules: {
-        username: [{ validator: pavalidateUsername, trigger: "blur" }],
+        username: [{ validator: validateUsername, trigger: "blur" }],
         password: [{ validator: validatePassword, trigger: "blur" }],
       },
     };
   },
   methods: {
+    ...mapMutations(['SET_USERINFO']),
     submitForm(formName) {
       // console.log(this.$refs[formName]);
       this.$refs[formName].validate((valid) => {
-        if (valid) {
-          //  代表本地校验通过
-          alert("submit!");
+        if (valid) {//  代表本地校验通过
+          //打开登入加载动画
+          const loading = this.$loading({
+            lock:true,
+            text:'正在登入',
+            spinner:'el-icon-loading',
+            background:'rgba(0, 0, 0, 0.7)'
+          })
+
+          let { username, password } = this.loginForm;
+          //  发送登入请求
+          login(username, password )
+            .then(res => {
+              // console.log(res);
+
+              //  服务器响应，关闭loading动画
+
+              loading.close()
+
+              if(res.data.state){
+                this.$message.success('登入成功')
+                //  用户名密码正确
+                localStorage.setItem('qf2006-token',res.data.token);
+                localStorage.setItem('qf2006-userInfo',JSON.stringify(res.data.userInfo));
+                //  更改vuex中state['userInfo']的值
+                this.SET_USERINFO(res.data.userInfo)
+                //  跳转到主页
+                this.$router.push("/")
+              }else{
+                //  用户名或密码错误
+                this.$message.error('用户名密码错误')
+              }
+            })
+            .catch( err => {
+              console.log(err);
+            })
+          // console.log(this.loginForm.username, this.loginForm.password);
         } else {
           console.log("error submit!!");
           return false;

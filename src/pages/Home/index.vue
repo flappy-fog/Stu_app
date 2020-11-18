@@ -52,13 +52,25 @@
         <el-header>
           <el-row type="flex" class="row-bg" justify="space-between">
             <el-col :span="6"
-              ><div class="grid-content bg-purple"></div
-            ></el-col>
+              ><div class="grid-content bg-purple">图标</div></el-col
+            >
             <el-col :span="6"
-              ><div class="grid-content bg-purple-light"></div
-            ></el-col>
+              ><div class="grid-content bg-purple-light">
+                千锋管理系统
+              </div></el-col
+            >
             <el-col :span="6"
-              ><div class="grid-content bg-purple"></div
+              ><div class="grid-content bg-purple">
+                <el-avatar
+                  shape="square"
+                  :size="40"
+                  fit="fit"
+                  src="https://tse1-mm.cn.bing.net/th/id/OIP.F3IHj63MYpZ0RmpvKz4Q_wHaJQ?pid=Api&rs=1"
+                ></el-avatar>
+                <span>欢迎您：</span>
+                <b class="nickname">{{userInfo.nickname}}</b>
+                <span class="quit" @click="quit">退出：</span>
+                </div
             ></el-col>
           </el-row>
         </el-header>
@@ -71,7 +83,17 @@
 </template>
 
 <script>
+import { getLoginLog } from "@/api";
+import { mapState } from "vuex"
 export default {
+  computed: {
+    ...mapState(['userInfo'])
+  },
+  mounted() {
+    getLoginLog().then((res) => {
+      console.log(res);
+    });
+  },
   data() {
     return {
       isCollapse: true,
@@ -84,15 +106,36 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
+    quit(){
+      //  退出登入
+      //  1.清除token和userInfo
+      //  2.跳转到登入页
+
+      localStorage.removeItem("qf2006-token")
+      localStorage.removeItem("qf2006-userInfo")
+
+      this.$router.push("/login")
+    }
   },
 };
 </script>
 
-<style>
+<style scoped>
+.quit{
+  cursor: pointer;
+  color: hotpink;
+}
+
+/* 图片样式对齐 */
+.el-avatar--square{
+  vertical-align: middle!important;
+}
+
+
 /* 顶部左中右样式 */
 .el-row {
   margin-bottom: 20px;
-   /* &:last-child {
+  /* &:last-child {
     margin-bottom: 0;
   } */
 }
