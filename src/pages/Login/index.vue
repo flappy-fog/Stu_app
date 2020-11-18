@@ -46,6 +46,12 @@
 
 
 <script>
+//  登入逻辑的实现
+
+//  1.收集用户输入的username&password传递给后端
+//  2.
+
+
 export default {
   data() {
     //jsDoc
