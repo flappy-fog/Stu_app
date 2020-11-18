@@ -3,9 +3,13 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 //  刷新页面会丢失用户信息，所以要从localStorage中取
-let userInfo = localStorage.getItem("qf2006-userInfo") || {}
+let userInfo = localStorage.getItem("qf2006-userInfo") || {};
 
-userInfo = JSON.parse(userInfo)
+if (userInfo == localStorage.getItem("qf2006-userInfo")) {
+  userInfo = JSON.parse(userInfo);
+} else {
+  userInfo = {};
+}
 
 export default new Vuex.Store({
   state: {
@@ -13,7 +17,7 @@ export default new Vuex.Store({
   },
   mutations: {
     //  更改userInfo
-    SET_USERINFO(state,payload){
+    SET_USERINFO(state, payload) {
       state.userInfo = payload;
     }
   },
