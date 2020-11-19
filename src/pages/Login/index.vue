@@ -39,7 +39,7 @@
       autoplay="autoplay"
       loop="loop"
       preload="auto"
-      src="../../../movie/stock-footage--k-video-hologram-zoom-out-loop-ideal-for-science-fiction-movies-technology-news-tv-shows.mp4"
+      src="../../assets/movie/stock-footage--k-video-hologram-zoom-out-loop-ideal-for-science-fiction-movies-technology-news-tv-shows.mp4"
     ></video>
   </div>
 </template>
@@ -132,7 +132,7 @@ export default {
                 //  更改vuex中state['userInfo']的值
                 this.SET_USERINFO(res.data.userInfo)
                 //  跳转到主页
-                this.$router.push("/home")
+                this.$router.push("/")
               }else{
                 //  用户名或密码错误
                 this.$message.error('用户名密码错误')
