@@ -1,5 +1,4 @@
-const { hasOwnMetadata } = require("core-js/fn/reflect");
-
+import Home from "../pages/Home"
 //  动态路由
 const dynamicRoutes = [
     {
@@ -11,7 +10,7 @@ const dynamicRoutes = [
     },
     {
         path: "*",
-        component: () => import(/*webpackChunkName:'page404' */ '../pages/Page404 ')
+        component: () => import(/*webpackChunkName:'page404' */ '../pages/Page404')
     },
 ]
 

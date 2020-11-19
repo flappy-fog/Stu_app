@@ -9,18 +9,7 @@
           :router="true"
           :collapse="isCollapse"
         >
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span slot="title">导航一</span>
-            </template>
-            <el-menu-item-group>
-              <span slot="title">分组一</span>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-menu-item index="/student">学员信息</el-menu-item>
+          <qf-sub-menu :sideMenu="menuList"></qf-sub-menu>
         </el-menu>
       </el-aside>
 
@@ -30,7 +19,10 @@
           <el-row type="flex" class="row-bg" justify="space-between">
             <el-col :span="6">
               <div class="grid-content bg-purple">
-                <i class="iconfont icon-zhankai" @click="isCollapse=!isCollapse"></i>
+                <i
+                  class="iconfont icon-zhankai"
+                  @click="isCollapse = !isCollapse"
+                ></i>
                 图标
               </div>
             </el-col>
@@ -68,12 +60,14 @@ import { getLoginLog } from "@/api";
 import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapState(["userInfo"]),
+    ...mapState(["userInfo", 'menuList']),
   },
   mounted() {
-    getLoginLog().then((res) => {
-      console.log(res);
-    });
+    // getLoginLog().then((res) => {
+    //   console.log(res);
+    // });
+
+    // this.$store.dispatch("FETCH_MENULIST")
   },
   data() {
     return {
@@ -81,12 +75,6 @@ export default {
     };
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
     quit() {
       //  退出登入
       //  1.清除token和userInfo
@@ -96,6 +84,14 @@ export default {
       localStorage.removeItem("qf2006-userInfo");
 
       this.$router.push("/login");
+      //  刷新页面
+      window.location.reload()
+    },
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
     },
   },
 };
@@ -103,7 +99,7 @@ export default {
 
 <style scoped>
 .icon-zhankai {
-  color:hotpink;
+  color: hotpink;
   /* font-size: 36px; */
   cursor: pointer;
 }

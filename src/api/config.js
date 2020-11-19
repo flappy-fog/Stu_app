@@ -12,7 +12,7 @@ axios.defaults.withCredentials = true;  //  允许请求携带认证
 
 axios.interceptors.request.use(config => {
     //  登入&注册时不需要携带token
-    console.log(config);
+    // console.log(config);
     if (config.url == "/users/login") {
         return config
     } else {
@@ -31,7 +31,9 @@ axios.interceptors.response.use(config => {
     if (data.code == '1004' || data.code == '10022') {
         //  在当前的后台api中1004代表token校验失败，10022表示session到期失效，提示错误，并且让页面跳转到登入页
         ElementUI.Message.error("登入信息失效，请重新登入")
+        localStorage.removeItem("qf2006-token") //  移除token防止信息过期产生的死循环
         router.push("/login")
+        window.location,reload()
     }
     // console.log(config);
     return config
