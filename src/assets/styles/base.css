@@ -1,10 +1,42 @@
-body{
+/* body{
     margin: 0;
-}
+} */
 
-h1, h2, h3, h4, h5, h6 {
+body,h1, h2, h3, h4, h5, h6 {
     margin: 0;
     padding: 0;
+}
+
+/* 侧边栏图标隐藏 */
+.el-menu--collapse .el-submenu__title span {
+    height:0;
+    width: 0;
+    overflow: hidden;
+    visibility: hidden;
+    display: inline-blocks;
+}
+
+.el-menu-collapse .el-menu-item .el-submenu__icon-arrow, .el-menu--collapse .el-submenu .el-submenu__title .el-submenu__icon-arrow {
+    display: none;
+}
+
+.el-menu-item-group .el-menu-item{
+    padding: 0 0 0 30px;
+}
+
+.el-menu-item-group .el-menu-item-group__title{
+    padding: 0;
+}
+
+/* NProgress进度条样式 */
+#nprogress .bar{
+    background: hotpink !important;
+}
+
+/* NProgress进度圈圈样式 */
+.spinner-icon {
+    border-top-color: #f56c6c !important;
+    border-left-color: #003df1 !important;
 }
 
 ul {

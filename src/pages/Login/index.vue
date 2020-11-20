@@ -24,12 +24,18 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
+        <!-- 验证码 -->
+        <!-- <el-form-item label="验证码" prop="captcha">
+          <el-input
+            type="text"
+            v-model="loginForm.captcha"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item> -->
+
         <el-form-item>
-          <el-button
-            type="success"
-            @click="submitForm('loginForm')"
-            
-          >登录
+          <el-button type="success" @click="submitForm('loginForm')"
+            >登录
           </el-button>
         </el-form-item>
       </el-form>
@@ -57,8 +63,8 @@
 
 //  5.校验不通过，跳转到登入页
 
-import { login } from "@/api" 
-import { mapMutations } from "vuex"
+import { login } from "@/api";
+import { mapMutations } from "vuex";
 export default {
   data() {
     //jsDoc
@@ -83,64 +89,80 @@ export default {
 
     //  校验用户密码
     var validatePassword = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
+      if (value === "") {
+        callback(new Error("请输入密码"));
       } else {
         callback();
       }
     };
+
+    //  校验验证码
+    var validateCaptcha = (rule, value, callback) => {
+      if (value === "" || value.length !== 5) {
+        callback(new Error("请输入验证码"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       loginForm: {
         username: "",
         password: "",
+        captcha:""
       },
       rules: {
         username: [{ validator: validateUsername, trigger: "blur" }],
         password: [{ validator: validatePassword, trigger: "blur" }],
+        captcha: [{ validator: validateCaptcha, trigger: "blur" }],
       },
     };
   },
   methods: {
-    ...mapMutations(['SET_USERINFO']),
+    ...mapMutations(["SET_USERINFO"]),
     submitForm(formName) {
       // console.log(this.$refs[formName]);
       this.$refs[formName].validate((valid) => {
-        if (valid) {//  代表本地校验通过
+        if (valid) {
+          //  代表本地校验通过
           //打开登入加载动画
           const loading = this.$loading({
-            lock:true,
-            text:'正在登入',
-            spinner:'el-icon-loading',
-            background:'rgba(0, 0, 0, 0.7)'
-          })
+            lock: true,
+            text: "正在登入",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
 
           let { username, password } = this.loginForm;
           //  发送登入请求
-          login(username, password )
-            .then(res => {
+          login(username, password)
+            .then((res) => {
               // console.log(res);
 
               //  服务器响应，关闭loading动画
 
-              loading.close()
+              loading.close();
 
-              if(res.data.state){
-                this.$message.success('登入成功')
+              if (res.data.state) {
+                this.$message.success("登入成功");
                 //  用户名密码正确
-                localStorage.setItem('qf2006-token',res.data.token);
-                localStorage.setItem('qf2006-userInfo',JSON.stringify(res.data.userInfo));
+                localStorage.setItem("qf2006-token", res.data.token);
+                localStorage.setItem(
+                  "qf2006-userInfo",
+                  JSON.stringify(res.data.userInfo)
+                );
                 //  更改vuex中state['userInfo']的值
-                this.SET_USERINFO(res.data.userInfo)
+                this.SET_USERINFO(res.data.userInfo);
                 //  跳转到主页
-                this.$router.push("/")
-              }else{
+                this.$router.push("/welcome");
+              } else {
                 //  用户名或密码错误
-                this.$message.error('用户名密码错误')
+                this.$message.error("用户名密码错误");
               }
             })
-            .catch( err => {
+            .catch((err) => {
               console.log(err);
-            })
+            });
           // console.log(this.loginForm.username, this.loginForm.password);
         } else {
           console.log("error submit!!");
@@ -184,9 +206,9 @@ body {
   text-align: center;
 }
 
-.el-button{
+.el-button {
   width: 250px;
-  background: linear-gradient(90deg,#1596fb,#002dff)!important;
+  background: linear-gradient(90deg, #1596fb, #002dff) !important;
   margin: 0 auto;
 }
 

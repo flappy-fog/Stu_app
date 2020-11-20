@@ -20,7 +20,8 @@ userInfo = JSON.parse(userInfo)
 export default new Vuex.Store({
   state: {
     userInfo,
-    menuList: [] //  用户侧边栏菜单
+    menuList: [], //  用户侧边栏菜单
+    crumbs:[]  // 面包屑
   },
   mutations: {
     //  更改userInfo
@@ -29,7 +30,7 @@ export default new Vuex.Store({
     },
     SET_MENULIST(state, payload) {
       state.menuList = payload;
-      console.log(state.menuList);
+      // console.log(state.menuList);
       //  动态的将路由添加到routes中  核心方法  router.addRoutes(符合路由规则的数组)
       //  1.将menuList赋值给dynamicRoutes的children
       let target = dynamicRoutes.find(item => item.path === "/")
@@ -37,6 +38,11 @@ export default new Vuex.Store({
       // console.log(dynamicRoutes);
       //  2.动态添加路由配置到router/routes中
       router.addRoutes(dynamicRoutes)
+    },
+
+    //  设置面包屑
+    SET_CRUMBS(state, payload){
+      state.crumbs = payload
     }
   },
   actions: {
@@ -45,7 +51,7 @@ export default new Vuex.Store({
       //  1.发送请求，获取用户菜单数据 
       let userMenu = await getMenuList()
       //  2.通过allRoutes和请求回来的用户菜单数据进行对比，将结果提交给mutation
-      console.log(userMenu);
+      // console.log(userMenu);
       let sideMenu = recursionRoutes(allRoutes, userMenu.data.menuList);
       //  3.将结果提交给mutation
       commit("SET_MENULIST", sideMenu)

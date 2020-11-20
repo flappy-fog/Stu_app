@@ -14,6 +14,10 @@ import './assets/iconfont/iconfont.css'
 //  引入subMenu组件
 import qfSubMenu from "qf-sub-menu"
 
+//  引入NProgress进度条
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
 
 Vue.use(ElementUI);
 Vue.use(qfSubMenu)
@@ -30,6 +34,7 @@ Vue.use(qfSubMenu)
 
 //  路由前置钩子(导航守卫)
 router.beforeEach((to, from, next) => {
+  NProgress.set(0.99) //  进入网页进度条加载开始
   // console.log(to);
   // console.log(from);
   //  用户登入之后,localStorage中有token
@@ -52,7 +57,16 @@ router.beforeEach((to, from, next) => {
       next({ path: "/login" })
     }
   }
+})
 
+
+//  使用路由后置钩子处理面包屑
+router.afterEach((to, from) => {
+  // console.log(to);
+  let crumblist = to.matched.slice(1)
+  console.log(crumblist);
+  store.commit('SET_CRUMBS', crumblist)
+  NProgress.done()  // 加载完毕进度条关闭
 })
 
 // 调试

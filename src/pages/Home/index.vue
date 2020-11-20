@@ -4,7 +4,7 @@
       <!-- 侧边栏 -->
       <el-aside width="200">
         <el-menu
-          default-active="1-4-1"
+          :default-active="$route.path"
           class="el-menu-vertical-demo"
           :router="true"
           :collapse="isCollapse"
@@ -48,6 +48,16 @@
 
         <!-- 主题区域 -->
         <el-main>
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/Welcome' }">
+            首页
+            </el-breadcrumb-item>
+            <el-breadcrumb-item
+              :to="{ path: crumb.path }"
+              v-for="crumb in crumbs" :key="crumb">
+              {{ crumb.meta.name }}
+              </el-breadcrumb-item>
+          </el-breadcrumb>
           <router-view></router-view>
         </el-main>
       </el-container>
@@ -60,13 +70,12 @@ import { getLoginLog } from "@/api";
 import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapState(["userInfo", 'menuList']),
+    ...mapState(["userInfo", "menuList", "crumbs"]),
   },
   mounted() {
     // getLoginLog().then((res) => {
     //   console.log(res);
     // });
-
     // this.$store.dispatch("FETCH_MENULIST")
   },
   data() {
@@ -85,7 +94,7 @@ export default {
 
       this.$router.push("/login");
       //  刷新页面
-      window.location.reload()
+      window.location.reload();
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
