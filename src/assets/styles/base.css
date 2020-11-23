@@ -58,3 +58,14 @@ html,body,#app,.home-page,.el-container{
 html,body,.login-page{
     height: 100%;
 }
+
+/* 验证码 */
+.login-page .captcha .el-input__inner{
+  width: 70% !important;
+  float: left;
+  margin-left: 20%;
+}
+
+.el-form-item__content{
+    display:flex;
+}

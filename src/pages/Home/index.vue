@@ -125,12 +125,27 @@ export default {
 }
 
 /* 顶部左中右样式 */
+.row-bg[data-v-1faf2446]{
+  padding: 0;
+  background: linear-gradient(135deg, #4c67ff, #5635df);
+
+}
+
+.bg-purple[data-v-1faf2446],  .bg-purple-light[data-v-1faf2446]{
+  background: transparent;
+}
+
 .el-row {
   margin-bottom: 20px;
   /* &:last-child {
     margin-bottom: 0;
   } */
 }
+
+.el-header {
+  background: linear-gradient(135deg, #4c67ff, #5635df);
+}
+
 .el-row:last-child {
   margin-bottom: 0;
 }

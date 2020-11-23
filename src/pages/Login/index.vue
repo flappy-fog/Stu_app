@@ -3,7 +3,6 @@
     <div class="loginContainer">
       <el-form
         :model="loginForm"
-        status-icon
         :rules="rules"
         ref="loginForm"
         label-width="100px"
@@ -25,13 +24,15 @@
           ></el-input>
         </el-form-item>
         <!-- 验证码 -->
-        <!-- <el-form-item label="验证码" prop="captcha">
+        <el-form-item label="验证码" prop="captcha">
           <el-input
             type="text"
+            class="captcha"
             v-model="loginForm.captcha"
             autocomplete="off"
           ></el-input>
-        </el-form-item> -->
+          <span class="captcha-svg" v-html="captchaSvg" @click="refreshCaptcha">1231234</span>
+        </el-form-item>
 
         <el-form-item>
           <el-button type="success" @click="submitForm('loginForm')"
@@ -63,7 +64,7 @@
 
 //  5.校验不通过，跳转到登入页
 
-import { login } from "@/api";
+import { login, getCaptcha, verifyCaptcha, } from "@/api";
 import { mapMutations } from "vuex";
 export default {
   data() {
@@ -106,6 +107,7 @@ export default {
     };
 
     return {
+      captchaSvg:"",  //  从服务器获取下来的验证码svg结构
       loginForm: {
         username: "",
         password: "",
@@ -118,13 +120,36 @@ export default {
       },
     };
   },
+  mounted () {
+    this.set_captcha()
+  },
   methods: {
+    //  刷新验证码
+    refreshCaptcha(){
+      this.set_captcha()
+    },
+    //  设置验证码
+    set_captcha(){
+      getCaptcha()
+        .then( res =>{
+          // console.log(res);
+          this.captchaSvg = res.data.img
+        })
+    },
     ...mapMutations(["SET_USERINFO"]),
     submitForm(formName) {
       // console.log(this.$refs[formName]);
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          //  代表本地校验通过
+      this.$refs[formName].validate(async(valid) => {
+        if (valid) {  //  代表本地校验通过
+          //  先验证验证码是否正确再发送登入请求
+          let verifyRes = await verifyCaptcha(this.loginForm.captcha)
+          // console.log(verifyRes);
+          if(!verifyRes.data.state){
+            //  验证码不正确
+            this.$$message.error('验证码输入错误，请重新输入')
+            return
+          }
+          
           //打开登入加载动画
           const loading = this.$loading({
             lock: true,
@@ -177,7 +202,15 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang="less">
+.captcha-svg{
+  background: #fff;
+  height: 44px;
+  margin-right: 10%;
+  cursor: pointer;
+}
+
+
 body {
   width: 100%;
 }
